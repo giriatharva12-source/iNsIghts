@@ -14,6 +14,7 @@ import {
   CheckCircle,
   Lightbulb,
   FileQuestion,
+  Download,
 } from "lucide-react";
 
 interface CustomQuestionsModalProps {
@@ -334,17 +335,23 @@ export function CustomQuestionsModal({
           )}
         </div>
 
-        {/* Footer Note */}
-        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-          <span className="text-[11px] text-white/40">
-            Custom questions can be included or set as exclusive in Room Settings.
-          </span>
+        {/* Footer Actions */}
+        <div className="mt-6 pt-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <a
+            href="/INSIGHT_Questions_Bank.pdf"
+            download="INSIGHT_Questions_Bank.pdf"
+            className="text-xs font-bold text-electric-pink hover:text-white flex items-center gap-1.5 transition-colors py-1.5 px-3 rounded-xl bg-white/5 hover:bg-white/10"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Download All 320 Built-In Questions (PDF)</span>
+          </a>
+
           <button
             onClick={() => {
               sound.click();
               onClose();
             }}
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition-all"
+            className="self-end sm:self-auto px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition-all"
           >
             Done
           </button>
