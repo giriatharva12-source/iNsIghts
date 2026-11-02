@@ -3248,8 +3248,23 @@ export function getFilteredQuestions(options: {
   categories?: QuestionCategory[];
   intensity?: IntensityLevel;
   excludeSpicy?: boolean;
+  questionSource?: "all" | "custom_only" | "standard_only";
+  customQuestions?: Question[];
 }): Question[] {
-  return SEED_QUESTIONS.filter((q) => {
+  let basePool: Question[] = [];
+
+  const customs = options.customQuestions || [];
+
+  if (options.questionSource === "custom_only") {
+    basePool = customs.length > 0 ? customs : SEED_QUESTIONS;
+  } else if (options.questionSource === "standard_only") {
+    basePool = SEED_QUESTIONS;
+  } else {
+    // "all"
+    basePool = [...customs, ...SEED_QUESTIONS];
+  }
+
+  return basePool.filter((q) => {
     // Mode match
     if (options.gameMode && !q.suitableModes.includes(options.gameMode)) {
       return false;
@@ -3288,6 +3303,8 @@ export function pickRandomQuestions(
     categories?: QuestionCategory[];
     intensity?: IntensityLevel;
     excludeSpicy?: boolean;
+    questionSource?: "all" | "custom_only" | "standard_only";
+    customQuestions?: Question[];
   },
   usedIds: Set<string> = new Set()
 ): Question[] {

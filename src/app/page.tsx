@@ -20,6 +20,7 @@ import { FinalResultsScreen } from "@/components/screens/FinalResultsScreen";
 import { FriendsScreen } from "@/components/screens/FriendsScreen";
 import { ProfileScreen } from "@/components/screens/ProfileScreen";
 import { AdminScreen } from "@/components/screens/AdminScreen";
+import { CustomQuestionsModal } from "@/components/screens/CustomQuestionsModal";
 import { sound } from "@/lib/sound";
 
 export default function GameApp() {
@@ -31,6 +32,7 @@ export default function GameApp() {
   const [room, setRoom] = useState<RoomState | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isJoinOpen, setIsJoinOpen] = useState(false);
+  const [isCustomQuestionsOpen, setIsCustomQuestionsOpen] = useState(false);
   const [selectedInitialMode, setSelectedInitialMode] = useState<GameMode>("CLASSIC");
   const [errorToast, setErrorToast] = useState<string>("");
 
@@ -114,6 +116,8 @@ export default function GameApp() {
       roundTimer: number;
       categories: QuestionCategory[];
       intensity: IntensityLevel;
+      questionSource: "all" | "custom_only" | "standard_only";
+      customQuestions: any[];
     }
   ) => {
     if (!profile) return;
@@ -322,6 +326,7 @@ export default function GameApp() {
             onCreateRoom={(mode) => handleOpenCreateRoom(mode)}
             onJoinRoom={() => setIsJoinOpen(true)}
             onQuickPlay={handleQuickPlay}
+            onOpenCustomQuestions={() => setIsCustomQuestionsOpen(true)}
             onSelectModeInfo={(mode) => handleOpenCreateRoom(mode)}
             onNavigate={(screen) => setCurrentScreen(screen)}
           />
@@ -443,6 +448,7 @@ export default function GameApp() {
         profile={profile}
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
+        onOpenCustomQuestions={() => setIsCustomQuestionsOpen(true)}
         onConfirm={handleConfirmCreateRoom}
       />
 
@@ -450,6 +456,11 @@ export default function GameApp() {
         isOpen={isJoinOpen}
         onClose={() => setIsJoinOpen(false)}
         onJoin={handleJoinRoom}
+      />
+
+      <CustomQuestionsModal
+        isOpen={isCustomQuestionsOpen}
+        onClose={() => setIsCustomQuestionsOpen(false)}
       />
     </div>
   );

@@ -34,6 +34,10 @@ class QuestionStore {
     }
   }
 
+  public getCustomQuestions(): Question[] {
+    return [...this.customQuestions];
+  }
+
   public getAllQuestions(): Question[] {
     const activeSeed = SEED_QUESTIONS.filter((q) => !this.deletedIds.has(q.id));
     return [...this.customQuestions, ...activeSeed];

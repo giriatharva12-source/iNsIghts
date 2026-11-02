@@ -25,6 +25,7 @@ interface HomeScreenProps {
   onCreateRoom: (mode?: GameMode) => void;
   onJoinRoom: () => void;
   onQuickPlay: () => void;
+  onOpenCustomQuestions: () => void;
   onSelectModeInfo: (mode: GameMode) => void;
   onNavigate: (screen: string) => void;
 }
@@ -131,6 +132,7 @@ export function HomeScreen({
   onCreateRoom,
   onJoinRoom,
   onQuickPlay,
+  onOpenCustomQuestions,
   onSelectModeInfo,
   onNavigate,
 }: HomeScreenProps) {
@@ -255,6 +257,44 @@ export function HomeScreen({
           </div>
         </motion.div>
       </div>
+
+      {/* Custom Questions Banner */}
+      <motion.div
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        onClick={() => {
+          sound.click();
+          onOpenCustomQuestions();
+        }}
+        className="p-5 rounded-3xl bg-gradient-to-r from-electric-purple/20 via-surface to-electric-pink/20 border border-electric-pink/40 shadow-glow flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer group"
+      >
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-electric-pink to-electric-orange flex items-center justify-center text-white text-2xl shadow-glow-pink shrink-0 group-hover:rotate-6 transition-transform">
+            ✍️
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-black text-white group-hover:text-electric-pink transition-colors">
+                My Custom Questions Pack
+              </h3>
+              <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-electric-pink/20 text-electric-pink border border-electric-pink/30">
+                Custom Pack
+              </span>
+            </div>
+            <p className="text-xs text-white/60 mt-0.5">
+              Add your own personal questions, inside jokes, and friend trivia to play in any room!
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="self-start sm:self-auto px-4 py-2 rounded-xl bg-electric-pink text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-glow-pink group-hover:brightness-110 transition-all shrink-0"
+        >
+          <span>Manage Questions</span>
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </motion.div>
 
       {/* Game Modes Showcase */}
       <div>

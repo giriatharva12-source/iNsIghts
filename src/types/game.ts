@@ -94,6 +94,8 @@ export interface GameSettings {
   intensity: IntensityLevel;
   allowSpectators: boolean;
   soundEffects: boolean;
+  questionSource?: "all" | "custom_only" | "standard_only";
+  customQuestions?: Question[];
 }
 
 export interface RoomState {

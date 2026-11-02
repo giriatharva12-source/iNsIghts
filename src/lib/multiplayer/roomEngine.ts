@@ -539,6 +539,8 @@ class MultiplayerManager {
       categories: room.settings.categories,
       intensity: room.settings.intensity,
       excludeSpicy: room.settings.intensity !== "spicy",
+      questionSource: room.settings.questionSource,
+      customQuestions: room.settings.customQuestions,
     });
 
     const targetPlayer = room.players.find((p) => p.id === room.targetPlayerId);

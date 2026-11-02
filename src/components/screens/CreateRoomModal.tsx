@@ -2,16 +2,18 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { GameMode, QuestionCategory, IntensityLevel, UserProfile } from "@/types/game";
+import { GameMode, QuestionCategory, IntensityLevel, UserProfile, Question } from "@/types/game";
 import { GAME_MODES_INFO } from "./HomeScreen";
+import { questionStore } from "@/lib/questionStore";
 import { sound } from "@/lib/sound";
-import { X, Sparkles, Sliders, Play, Check } from "lucide-react";
+import { X, Sparkles, Sliders, Play, Check, Edit3, HelpCircle } from "lucide-react";
 
 interface CreateRoomModalProps {
   initialMode?: GameMode;
   profile: UserProfile;
   isOpen: boolean;
   onClose: () => void;
+  onOpenCustomQuestions: () => void;
   onConfirm: (
     mode: GameMode,
     settings: {
@@ -19,6 +21,8 @@ interface CreateRoomModalProps {
       roundTimer: number;
       categories: QuestionCategory[];
       intensity: IntensityLevel;
+      questionSource: "all" | "custom_only" | "standard_only";
+      customQuestions: Question[];
     }
   ) => void;
 }
@@ -41,6 +45,7 @@ export function CreateRoomModal({
   profile,
   isOpen,
   onClose,
+  onOpenCustomQuestions,
   onConfirm,
 }: CreateRoomModalProps) {
   const [selectedMode, setSelectedMode] = useState<GameMode>(initialMode);
@@ -53,6 +58,9 @@ export function CreateRoomModal({
     "Deep",
   ]);
   const [intensity, setIntensity] = useState<IntensityLevel>("medium");
+  const [questionSource, setQuestionSource] = useState<"all" | "custom_only" | "standard_only">("all");
+
+  const customQuestions = questionStore.getCustomQuestions();
 
   if (!isOpen) return null;
 
@@ -74,6 +82,8 @@ export function CreateRoomModal({
       roundTimer,
       categories: selectedCategories,
       intensity,
+      questionSource,
+      customQuestions,
     });
   };
 
@@ -129,6 +139,57 @@ export function CreateRoomModal({
                 <div className="text-xl mb-1">{mode.icon}</div>
                 <div className="text-xs font-bold text-white">{mode.name}</div>
                 <div className="text-[10px] text-white/50 truncate">{mode.vibe}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Question Source (Custom vs Standard) */}
+        <div className="mb-6 p-4 rounded-2xl bg-black/30 border border-electric-pink/30 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-black uppercase tracking-wider text-white block">
+                Question Source & Custom Pack
+              </span>
+              <span className="text-[11px] text-white/50">
+                Choose whether to include your personal custom questions
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                sound.click();
+                onOpenCustomQuestions();
+              }}
+              className="px-3 py-1.5 rounded-xl bg-electric-purple/30 hover:bg-electric-purple text-electric-pink hover:text-white border border-electric-pink/40 text-xs font-bold transition-all flex items-center gap-1 active:scale-95"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>My Questions ({customQuestions.length})</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { id: "all", label: "Standard + Custom", desc: "Best of both" },
+              { id: "custom_only", label: "Custom Only", desc: `${customQuestions.length} questions` },
+              { id: "standard_only", label: "Standard Bank", desc: "320+ questions" },
+            ].map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => {
+                  sound.click();
+                  setQuestionSource(opt.id as "all" | "custom_only" | "standard_only");
+                }}
+                className={`p-2.5 rounded-xl border text-center transition-all ${
+                  questionSource === opt.id
+                    ? "bg-electric-pink/20 border-electric-pink text-white shadow-glow-pink"
+                    : "bg-black/20 border-white/5 text-white/60 hover:text-white"
+                }`}
+              >
+                <span className="text-xs font-extrabold block truncate">{opt.label}</span>
+                <span className="text-[10px] text-white/40 block truncate">{opt.desc}</span>
               </button>
             ))}
           </div>
@@ -263,4 +324,3 @@ export function CreateRoomModal({
     </div>
   );
 }
-
